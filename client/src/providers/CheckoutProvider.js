@@ -12,7 +12,6 @@ const CheckoutProvider = ({ children }) => {
       })
       .catch( err => console.log(err) )
   }
-  
   const addCheckout = (checkout) => {
     axios.post("/api/checkouts", { checkout })
       .then( res => {
@@ -20,8 +19,7 @@ const CheckoutProvider = ({ children }) => {
       })
       .catch( err => console.log(err) )
   }
-  
-  const updateCheckout = (id, checkout) => {
+  const updateCheckout = (id, checkout, history) => {
     axios.put(`/api/checkouts/${id}`, { checkout })
       .then( res => {
         const updatededCheckouts = checkouts.map( c => {
@@ -31,19 +29,19 @@ const CheckoutProvider = ({ children }) => {
           return c
         })
         setCheckouts(updatededCheckouts)
+        history.push("/checkouts")
       })
       .catch( err => console.log(err) )
   }
-  
-  const deleteCheckout = (id) => {
+  const deleteCheckout = (id, history) => {
     axios.delete(`/api/checkouts/${id}`)
       .then( res => {
         setCheckouts(checkouts.filter( c => c.id !== id))
         alert(res.data.message)
+        history.push("/checkouts")
       })
       .catch( err => console.log(err) )
   }
-  
   return (
     <CheckoutContext.Provider value={{
       checkouts,

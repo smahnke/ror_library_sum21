@@ -1,13 +1,26 @@
 import { useState, useEffect } from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { CheckoutConsumer } from '../../providers/CheckoutProvider';
+import { withRouter } from 'react-router-dom';
 
-const CheckoutForm = ({ addCheckout, }) => {
+const CheckoutForm = ({ addCheckout, id, checkout_date, return_date, fees, updateCheckout, handleEditClose, history }) => {
   const [checkout, setCheckout] = useState({ checkout_date: "", return_date: "", fees: 0.0 })
+  useEffect( () => {
+    if (id) {
+      setCheckout({ checkout_date, return_date, fees })
+    }
+  }, [])
+  
   const handleSubmit = (e) => {
     e.preventDefault()
     setCheckout({...checkout, fees: parseFloat(checkout.fees)})
-    addCheckout(checkout)
+    if (id) {
+      updateCheckout(id, checkout, history)
+      handleEditClose()
+    } else {
+      addCheckout(checkout)
+    }
+    setCheckout({ checkout_date: "", return_date: "", fees: 0.0 })
   }
   
   return(
@@ -62,4 +75,4 @@ const ConnectedCheckoutForm = (props) => (
   </CheckoutConsumer>
 )
 
-export default ConnectedCheckoutForm;
+export default withRouter(ConnectedCheckoutForm);
